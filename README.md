@@ -9,13 +9,15 @@
 [Approach](#approach "Goto approach") |
 [Planning](#planning "Goto planning") |
 [Build](#build "Goto build") |
-[Backend](#backend "Goto backend") |
-[Navbar](#navbar "Goto navbar") |
-[Character Index Page](#character-index-page "Goto character-index-page") |
-[Character Cards](#character-cards "Goto character-cards") |
-[Character Show](#character-show "Goto character-show") |
-[Filtering & Searching Index](#filtering-and-searching-index "Goto filtering-and-searching-index") |
-[Loading and Error Pages](#loading-and-error-pages "Goto loading-and-error-pages") |
+[Backend](#backend "Goto backend")
+
+[Frontend](#frontend "Goto frontend")
+
+
+[Countries Index Page](#countries-index-page "Goto countries-index-page") |
+[Country Show](#country-show "Goto country-show") |
+
+
 [Challenges](#challenges "Goto challenges") |
 [Wins](#wins "Goto wins") |
 [Bugs](#bugs "Goto bugs") |
@@ -25,7 +27,7 @@
 ![demo app](/rmassets/home.png)
 
 ## Overview:
-Placebook is full-stack app focused on travel. Users would be able to create trips, and upload individual memories via photos with notes. The aim of this app is to allow like minded travellers to document and share their memories to this community.
+Placebook is full-stack app focused on travel and memories. Users would be able to create trips, and upload their own unique memories (photos with notes). The aim of this app is to allow like minded travellers to document and share their memories to this community.
 <br></br>
 This was a one-week group project built in collaboration with [**Duncan Browne**](https://github.com/DBBrowne/) and [**Mike Salter**](https://github.com/Msalter91/). 
 
@@ -56,7 +58,6 @@ Git | GitHub | MapBox | Miro | Cloudinary | Photopea | Inkscape
 ## Deployment:
 This app has been deployed on Netlify and can be found [**here**](https://placebookapp.netlify.app/ "here")
 
-<!-- ![demo app](/rmassets/logos.png) -->
 
 <!-- ## Getting Started:
 Use the clone button to download the app source code. 
@@ -82,40 +83,197 @@ Since it was our first time working together, we had daily standups every mornin
 ## Build:
 We began by setting up our Frontend and Backend files together coding along on zoom to ensure the initial set up of known dependancies were correctly installed.
 
-We initially split our roles into three areas. I focused on frontend setup of pages, navbar and design/branding. Mike worked into building the models and general functionality of the Backend and Duncan focused on implementing a suitable map into the site. 
-
+We initially split our roles into three areas. I focused on frontend setup of pages, navbar and design/branding. Mike worked into building the models and general functionality of the Backend and Duncan focused on implementing a suitable map into the site as well as creating trips/memories functionality. 
 
 ## Backend:
+Our backend consists of four models:
 
-## Navbar:
+#### Country Model
+```js
+const countrySchema = new mongoose.Schema({
+  name: { type: String, required: true, unique: true },
+  image: { type: String },
+  countrycode: { type: String, required: true },
+  summary: { type: String, required: true },
+  language: { type: String, required: true },
+  currency: { type: String, required: true },
+})
+```
+#### Trip Model
+
+```js
+const tripSchema = new mongoose.Schema({
+  title: { type: String, maxlength: 50 },
+  notes: { type: String, maxlength: 300 },
+  countryVisited: { type: String },
+  dateStarted: { type: String },
+  dateFinished: { type: String },
+  memories: [{ type: mongoose.Schema.ObjectId, ref: 'Memory' }],
+  addedBy: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
+  ```
+
+#### Memory Model
+  ```js
+  const memorySchema = new mongoose.Schema({
+  name: { type: String, required: true, maxlength: 100 },
+  location: { type: String, required: true, maxlength: 30 },
+  image: { type: String },
+  notes: { type: String, maxlength: 200 },
+  lat: { type: Number, required: true  },
+  long: { type: Number, required: true },
+  visitDate: { type: String },
+  pairedTrip: { type: mongoose.Schema.ObjectId, ref: 'Trip' },
+  addedBy: { type: mongoose.Schema.ObjectId, ref: 'User', required: true }, 
+},
+{ timestamps: { createdAt: 'created_at' } }
+)
+```
+
+#### User Model
+```js
+const userSchema = new mongoose.Schema({
+displayName: { type: String, required: true },
+email: { type: String, required: true, unique: true },
+firstName: { type: String, maxlength: 30 },
+surname: { type: String, maxlength: 30 },
+location: { type: String },
+password: { type: String, required: true },
+image: { type: String, required: true, default: 'URL for blank display pic goes here' },
+about: { type: String, maxlength: 300 },
+trips: [{ type: mongoose.Schema.ObjectId, ref: 'Trip' }],
+memories: [{ type: mongoose.Schema.ObjectId, ref: 'Memory' }],  
+})
+```
+Using Mongoose’s relationships, we were able to reference the other models and populate these fields when needed. This was particularly useful in creating our trip/memory relationship.
 
 
-## Character Index Page:
+#### 
+The purpose of this site is to allow users to upload their memories to be visable to all. 
 
-## Character Cards:
+## Router:
+ This file defines each of the pages accessibility and decides which requests would require a user to be logged in (secure route).
 
-## Character Show: 
+ The app is mostly publicly accessible to everyone (home page, countries index page, country show page, trips index page, trips show page, memories index, memory show) however anything profile related with the power to create / edit / delete would require user authentication.  
+
+```js
+const router = express.Router()
+
+// Countries
+router.route('/countries')
+  .get(countries.index)
+
+router.route('/countries/:countryId')
+  .get(countries.show)
+
+// Trips
+router.route('/trips')
+  .post(secureRoute , trips.create)
+  .get(trips.index)
+
+router.route('/trips/:tripId')
+  .delete(secureRoute, trips.delete)
+  .get(trips.show)
+  .put(secureRoute, trips.edit)
+
+// Memories 
+router.route('/memories')
+  .post(secureRoute, memories.create)
+  .get(memories.index)
+
+router.route('/memories/:memoryId')
+  .delete(secureRoute, memories.delete)
+  .get(memories.show)
+  .put(secureRoute, memories.edit)
+
+//Users
+router.route('/register')
+  .post(auth.register)
+
+router.route('/login')
+  .post(auth.login)
+
+router.route('/profile/:userId')
+  .get(users.display)
+// requires handling admin permissions before enabling:
+// .put(secureRoute, users.edit)
+
+router.route('/profile')
+  .get(secureRoute, users.display)
+  .put(secureRoute, users.edit)
+
+export default router
+```
+
+Secure routes grant access only to those have successfully log in. When a user logs in successfully, user tokens (which have limited time expiry) would be assigned to the userId to allow secure route paths to be accessed. In the event of no token, the Backend would throw a 401 unauthorized error.
+
+```js
+export default function errorHandler (err, req, res, next) {
+  if (err.name === 'CastError' || err.name === 'NotFound') {
+    return res.status(404).json({ message: 'Cannot find that' })
+  }
+
+  if (
+    err.name === 'Unauthorized' ||
+    err.name === 'JsonWebTokenError' ||
+    err.name === 'TokenExpiredError'
+  ){
+    return res.status(401).json({ message: 'Unauthorized' })
+  }
+
+  if (err.name === 'ValidationError') {
+    const customErrors = {} 
+
+    for (const key in err.errors) {
+      customErrors[key] = err.errors[key].message
+    }
+    return res.status(422).json({ 
+      message: 'Invalid data', 
+      errors: customErrors, 
+    })
+  }
+  next(err)
+}
+```
 
 
-## Filtering and Searching Index:
 
+## FrontEnd:
 
-## Loading and Error Pages
+## Countries Index Page:
+## Country Show Page:
 
-
-## Challenges:
  
 
+## Challenges:
+* Working on a shared Github file
+* Merge conflicts 
+* Using new technologies (Map), Maps is out of my comfort zone
+* Bootstrap 5.0 took a little bit of getting used to
+
 ## Wins:
+* A professional looking app which is mobile responsive
+* Covering a lot of ground over the course of 1 week I'm very happy that we have managed to build a full-stack app that conveys what we initially set out to do.
 
 ## Bugs:
+* Deployed app 'Inspire Me' correctly shows country index, but when clicking into a individual country, the page breaks.
+* Deployed app is unable to Login (throwing a 401 unauthorized)
+* Deployed app is unable to see profile of user (as login required)
+* Deployed app is unable to edit profile of user (as login required)
+* Deployed app is unable to create trip / memory (as login required)
+* Maps - although is functioning is throwing errors on console log
 
 ## Key Learnings:
-
+* To set clear MVP deadlines and 
+* Working as a team using a shared Git repository
+* add & commit often and communicate on every push
+* I am happy with this app, but in hindsight, I feel that the scope of this project was probably too much (we were working on this project right up to the deadline and didn't allow enough time to properly debug/iron out issues)
+* Working with Mike and Duncan helped me understand the importance of communication and collaboration within a team
+* If ever I need to use Maps going forward, avoid google maps
 
 ## Future Content and Improvements:
-
-
+* Its easy to suggest things to add (i.e, liking photos/memories, perhaps comment features) - however I think that any chance to revisit would be to prioritise ironing out bugs to allow all page functionality and then improve on usability of app
+* General aethetics ok, but maybe pages that have maps need simplifying or update to layout to make the user experience more streamlined.
+* Improve user navigation experience, I feel that for someone who has never used the site before may struggle with what order to do things. Such as a user wanting to upload memories (photos), they would first need to create a trip, fill in details, pick a country, and save the trip. Then upload photo, fill in form, finetune location on map, and then save the memory
  
 ----
 
