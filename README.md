@@ -4,19 +4,30 @@
 [Overview](#overview "Goto overview") |
 [Brief](#brief "Goto brief") |
 [Timeframe](#timeframe "Goto timeframe") |
-[Technologies used](#technologies-used "Goto technologies-used") |
+[Technologies used](#technologies-used "Goto technologies used") |
 [Deployment](#deployment "Goto deployment") |
-[Getting Started](#getting-started "Goto getting started") |
 [Approach](#approach "Goto approach") |
 [Planning](#planning "Goto planning") |
 [Build](#build "Goto build") |
-[Backend](#backend "Goto backend")
+[Backend](#backend "Goto backend") |
+[Router](#router "Goto router") |
+[Seeding Data](#seeding-data "Goto seeding data") |
 
-[Frontend](#frontend "Goto frontend")
-
-
-[Countries Index Page](#countries-index-page "Goto countries-index-page") |
-[Country Show](#country-show "Goto country-show") |
+[Frontend](#frontend "Goto frontend") |
+[Home Page](#home-page "Goto home page") |
+[Nav Bar](#nav-bar "Goto nav bar") |
+[About Us](#about-us "Goto about us") |
+[Inspire Me](#inspire-me "Goto inspire me") |
+[Show Country Page](#show-country-page "Goto show country page") |
+[Create a Trip](#create-a-trip "Goto create a trip") |
+[Create Memories](#create-memories "Goto create memories") |
+[Mapbox](#mapbox "Goto mapbox") |
+[See Trips](#see-trips "Goto see trips") |
+[Register and Login](#register-and-login "Goto register and login") |
+[Profile](#profile "Goto profile ") |
+[Edit Profile](#edit-profile "Goto edit profile") |
+[Profile with memories](#profile-with-memories "Goto profile with memories") |
+[Single Memory view](#single-memory-view "Goto single memory view ") |
 
 
 [Challenges](#challenges "Goto challenges") |
@@ -26,7 +37,7 @@
 [Future Content and Improvements](#future-content-and-improvements "Goto future-content-and-improvements")
 
 ## Overview:
-Placebook is full-stack app focused on travel and memories. Users would be able to create trips, and upload their own unique memories (photos with notes). The aim of this app is to allow like minded travellers to document and share their memories to this community.
+Placebook is a full-stack app focused on travel and memories. Users would be able to create trips, and upload their own unique memories (photos with notes). The aim of this app is to allow like minded travellers to document and share their memories to this community.
 <br></br>
 This was a one-week group project built in collaboration with [**Duncan Browne**](https://github.com/DBBrowne/) and [**Mike Salter**](https://github.com/Msalter91/). 
 
@@ -57,16 +68,6 @@ Git | GitHub | MapBox | Miro | Cloudinary | Photopea | Inkscape
 ## Deployment:
 This app has been deployed on Netlify and can be found [**here**](https://placebookapp.netlify.app/ "here")
 
-
-<!-- ## Getting Started:
-Use the clone button to download the app source code. 
-
-* Using NPM:\
-`npm run start` or `npm run dev` to run the development server
-`npm run build` to create a build directory
-
-* To prevent the `failed-to-compile` issue for linter errors like `no-unused-vars`, rename the `.env.example` to `.env` and restart your development server. Note this will only change the behaviour of certain linter errors to now be warnings, and is added just to allow your code to compile in development. These errors should still be fixed and other errors will still result in the code being unable to compile -->
-
 ## Approach:
 
 ### Planning:
@@ -74,13 +75,13 @@ On meeting up with the other team members for this project, we initially shared 
 
 ![modelwireframe](/rmassets/wireframe.png)
 
-Next came the page end points, again visualised by buiilding on Miro. Planning on a Miro was very helpful as a return point whilst working to stay visually aware of the continuous build over the coming days.
+Next came the page end points, again visualised by building on Miro. Planning on a Miro was very helpful as a return point whilst working to stay visually aware of the continuous build over the coming days.
 Since it was our first time working together, we had daily standups every morning to discuss each of our areas of work and to discuss any concerns encountered. The Miro board was a great way also to pin any issues / additional ideas back to the team.
 
 **** ADD IMAGES OF PAGE SKETCHES
 
 ## Build:
-We began by setting up our Frontend and Backend files together coding along on zoom to ensure the initial set up of known dependancies were correctly installed.
+We began by setting up our Frontend and Backend files together coding along on zoom to ensure the initial setup of known dependencies were correctly installed.
 
 We initially split our roles into three areas. I focused on frontend setup of pages, navbar and design/branding. Mike worked into building the models and general functionality of the Backend and Duncan focused on implementing a suitable map into the site as well as creating trips/memories functionality. 
 
@@ -199,7 +200,7 @@ router.route('/profile')
 export default router
 ```
 
-Secure routes grant access only to those have successfully log in. When a user logs in successfully, user tokens (which have limited time expiry) would be assigned to the userId to allow secure route paths to be accessed. In the event of no token, the Backend would throw a 401 unauthorized error.
+Secure routes grant access only to those who have successfully log in. When a user logs in successfully, user tokens (which have limited time expiry) would be assigned to the userId to allow secure route paths to be accessed. In the event of no token, the Backend would throw a 401 unauthorized error.
 
 ```js
 export default function errorHandler (err, req, res, next) {
@@ -230,9 +231,9 @@ export default function errorHandler (err, req, res, next) {
 }
 ```
 
-### Seeding Data (Country pages): 
+### Seeding Data: 
 206 countries would ideally be pre-populated with data and images.
-However as this was our own backend, it was a very long process which was a poor use of time (I surrendered after doing about 40 countries). The summary and additional information was obtained and edited from Wikipedia. Each country image was sourced from the web and stored into imgur. 
+However as this was our own backend, it was a very long process which was a poor use of time (I surrendered after doing about 40 countries). The summary and additional information was obtained and edited from Wikipedia. Each country's image was sourced from the web and stored into imgur. 
 
 An example of data for one country below...
 
@@ -280,7 +281,7 @@ My main role in this project was on the Frontend. I began this process by settin
 
 #### Home Page:
 This was the first page to be created.
-![demo app](/rmassets/home.png)
+![home](/rmassets/home.png)
 
 #### Nav Bar:
 Created with Bootstrap 5 & React Bootstrap, it has been created without a background to allow a cleaner looking nav bar. The far left icon is the home button. Register and Login is stacked on the right. When a user has logged in, this section will update to show logout.
@@ -321,11 +322,11 @@ Created with Bootstrap 5 & React Bootstrap, it has been created without a backgr
   ```
 
 #### About Us:
-This page was created to give an introduction into what the app does. The page is full mobile reponsive and features modal pop out images created with Bootstrap.
-![demo app](/rmassets/about.png)
+This page was created to give an introduction into what the app does. The image cards have been designed to look like polaroid images. The page is fully mobile responsive and features modal pop out images created with Bootstrap.
+![about us](/rmassets/about.png)
 
 #### Inspire Me:
-This page acts as a index of all the countries. Clicking onto any of the country images will take you to a show page for the selected country. The Index page has a search bar for the user to type the country of choice.
+This page acts as an index for all the available countries. Clicking onto any of the country images will take you to a show page for the selected country. The Index page has a search bar for the user to type the country of choice.
 
 ```js
   const handleSearch = (e) => {
@@ -340,24 +341,76 @@ This page acts as a index of all the countries. Clicking onto any of the country
     })
   }
 ```
-![demo app](/rmassets/countriesindex.png)
+![countries index](/rmassets/countriesindex.png)
 
 ### Show Country Page:
 User trips that match this country are added to the country page for other users to view.
-![demo app](/rmassets/countryloggedtrips.png)
+It is important to note that the country name must be selected when creating the trip or else it has no way to link to this page.
+![country trips](/rmassets/countryloggedtrips.png)
 
 ### Create a Trip:
-This page can only be accessed if user is logged in.
-![demo app](/rmassets/createtrip2.png)
+This page is accessible via the nav bar and via a logged in user profile. To create a trip is the beginning of creating a memory also. You must first create a trip to contain all the memories.
+![create trip](/rmassets/createtrip.png)
+
+### Create Memories:
+After a trip section has been successfully completed and saved, it will send the post request using the same name as the trip. All memories created now belong to that trip. 
+
+![create memories](/rmassets/creatememories.png)
+
+The image upload is maintained by using Cloudinary (end-to-end image storage/manipulation).
+![cloudinary memories](/rmassets/cloudinarymemories.png)
+
+### Mapbox:
+It was decided very early on that we wanted Maps to be part of this project. It is logical that for a user to upload a photo memory, then it should have a documented location and country. Our map makes it possible to show and plot users' memories by location. The first choice map was originally the Google Maps API. Unfortunately it proved too difficult to work with, so we tried Mapbox. Mapbox was an ideal solution, and functions well on our app. However, We did encounter issues with Mapbox when deploying the app (Map/page crash). We tested other versions of Mapbox and were able to overcome this.   
 
 ### See Trips:
-### Register 
-### Login
-### Profile
-### Edit Profile
-###
+This page shows a large map documenting all the locations of trips - of course, the more users on this app, the more populated the map would be.
+Each user's memory is allocated a unique colour trip polyline to track places of travel.
 
- 
+![see all trips](/rmassets/seealltrips.png)
+
+
+### Register and Login:
+Both forms are controlled by using state and will throw errors if any of the field requirements are not met.
+Once a user successfully registers, the page redirects to the login page. Once login is successful the user is granted a token and redirected to the user profile page.
+
+  ```js
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const res = await loginUser(formData)
+      setToken(res.data.token)
+      getUserId()
+      history.push('/profile')
+    } catch (err) {
+      setIsError(true)
+    }
+  }
+  ```
+![register](/rmassets/register.png)
+![login](/rmassets/login.png)
+
+### Profile:
+The initial profile page created upon initial login is only partially complete.
+A placebook default image is used for the profile image.
+From this point the logged in user has options to edit profile or navigate to creating a new trip/memory.
+![initial profile](/rmassets/profileinitial.png)
+
+### Edit Profile:
+Navigating over to edit profile, the user is now able to fill in some basic information and upload a profile image (to cloudinary).
+![edit profile](/rmassets/profileedit.png)
+
+
+### Profile with memories:
+Every trip and memories created will now show (index) on the owner's user profile. 
+These memories can be clicked on to view in more detail. 
+![user profile](/rmassets/profile.png)
+
+### Single Memory view:
+Following on from the user profile memories (index), the below illustrates a single memory show page.
+![user single memory](/rmassets/singlememory.png)
+
 
 ## Challenges:
 * Working on a shared Github file
@@ -370,7 +423,7 @@ This page can only be accessed if user is logged in.
 * Covering a lot of ground over the course of 1 week I'm very happy that we have managed to build a full-stack app that conveys what we initially set out to do.
 
 ## Bugs:
-* Deployed app 'Inspire Me' correctly shows country index, but when clicking into a individual country, the page breaks.
+* Deployed app 'Inspire Me' correctly shows the country index, but when clicking into an individual country, the page breaks.
 * Deployed app is unable to Login (throwing a 401 unauthorized)
 * Deployed app is unable to see profile of user (as login required)
 * Deployed app is unable to edit profile of user (as login required)
@@ -387,7 +440,7 @@ This page can only be accessed if user is logged in.
 
 ## Future Content and Improvements:
 * Its easy to suggest things to add (i.e, liking photos/memories, perhaps comment features) - however I think that any chance to revisit would be to prioritise ironing out bugs to allow all page functionality and then improve on usability of app
-* General aethetics ok, but maybe pages that have maps need simplifying or update to layout to make the user experience more streamlined.
+* General aesthetics ok, but maybe pages that have maps need simplifying or updating the layout to make the user experience more streamlined.
 * Improve user navigation experience, I feel that for someone who has never used the site before may struggle with what order to do things. Such as a user wanting to upload memories (photos), they would first need to create a trip, fill in details, pick a country, and save the trip. Then upload photo, fill in form, finetune location on map, and then save the memory
 * Darkmode would be a nice touch to this site 
 ----
