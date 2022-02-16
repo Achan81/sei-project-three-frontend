@@ -9,6 +9,7 @@
 [Approach](#approach "Goto approach") |
 [Planning](#planning "Goto planning") |
 [Build](#build "Goto build") |
+[Work Split](#work-split "Goto work split") |
 [Backend](#backend "Goto backend") |
 [Router](#router "Goto router") |
 [Seeding Data](#seeding-data "Goto seeding data") |
@@ -81,8 +82,9 @@ Since it was our first time working together, we had daily standups every mornin
 **** ADD IMAGES OF PAGE SKETCHES
 
 ## Build:
-We began by setting up our Frontend and Backend files together coding along on zoom to ensure the initial setup of known dependencies were correctly installed.
+We began by setting up our Frontend and Backend files together, coding along on Zoom to ensure the initial setup of known dependencies were correctly installed.
 
+## Work Split:
 We initially split our roles into three areas. I focused on frontend setup of pages, navbar and design/branding. Mike worked into building the models and general functionality of the Backend and Duncan focused on implementing a suitable map into the site as well as creating trips/memories functionality. 
 
 ## Backend:
@@ -149,7 +151,7 @@ Using Mongoose’s relationships, we were able to reference the other models and
 ### Router:
  This file defines each of the pages accessibility and decides which requests would require a user to be logged in (secure route).
 
- The app is mostly publicly accessible to everyone (home page, countries index page, country show page, trips index page, trips show page, memories index, memory show) however anything profile related with the power to create / edit / delete would require user authentication.  
+ The app is mostly publicly accessible to everyone (home page, countries index page, country show page, trips index page, trips show page, memories index, memory show) however, anything profile related with the power to create / edit / delete would require user authentication.  
 
 ```js
 const router = express.Router()
@@ -200,7 +202,7 @@ router.route('/profile')
 export default router
 ```
 
-Secure routes grant access only to those who have successfully log in. When a user logs in successfully, user tokens (which have limited time expiry) would be assigned to the userId to allow secure route paths to be accessed. In the event of no token, the Backend would throw a 401 unauthorized error.
+Secure routes grant access only to those who have successfully logged in. When a user logs in successfully, user tokens (which have limited time expiry) would be assigned to the userId to allow secure route paths to be accessed. In the event of no token, the Backend would throw a 401 unauthorized error.
 
 ```js
 export default function errorHandler (err, req, res, next) {
@@ -233,7 +235,7 @@ export default function errorHandler (err, req, res, next) {
 
 ### Seeding Data: 
 206 countries would ideally be pre-populated with data and images.
-However as this was our own backend, it was a very long process which was a poor use of time (I surrendered after doing about 40 countries). The summary and additional information was obtained and edited from Wikipedia. Each country's image was sourced from the web and stored into imgur. 
+However, as this was our own backend, it was a very long process which was a poor use of time (I surrendered after doing about 40 countries). The summary and additional information was obtained and edited from Wikipedia. Each country's image was sourced from the web and stored into imgur. 
 
 An example of data for one country below...
 
@@ -242,7 +244,7 @@ An example of data for one country below...
     name: 'Japan',
     countrycode: 'JPN',
     image: 'https://i.imgur.com/iXOULiL.jpg?2',
-    summary: 'The capital of Japan is Tokyo, Japan (Japanese: 日本, Nippon or Nihon, and formally 日本国) is an island country in East Asia.  It is situated in the northwest Pacific Ocean, and is bordered on the west by the Sea of Japan, while extending from the Sea of Okhotsk in the north toward the East China Sea and Taiwan in the south.  Japan is a part of the Ring of Fire, and spans an archipelago of 6852 islands covering 377,975 square kilometers (145,937 sq mi); the five main islands are Hokkaido, Honshu (the "mainland"), Shikoku, Kyushu, and Okinawa.  Tokyo is the nation\'s capital and largest city; other major cities include Yokohama, Osaka, Nagoya, Sapporo, Fukuoka, Kobe, and Kyoto.',  
+    summary: 'The capital of Japan is Tokyo, Japan (Japanese: 日本, Nippon or Nihon, and formally 日本国) is an island country in East Asia. It is situated in the northwest Pacific Ocean, and is bordered on the west by the Sea of Japan, while extending from the Sea of Okhotsk in the north toward the East China Sea and Taiwan in the south.  Japan is a part of the Ring of Fire, and spans an archipelago of 6852 islands covering 377,975 square kilometers (145,937 sq mi); the five main islands are Hokkaido, Honshu (the "mainland"), Shikoku, Kyushu, and Okinawa. Tokyo is the nation\'s capital and largest city; other major cities include Yokohama, Osaka, Nagoya, Sapporo, Fukuoka, Kobe, and Kyoto.',  
     language: 'Japanese',
     currency: 'Yen',
   },
@@ -367,12 +369,21 @@ It was decided very early on that we wanted Maps to be part of this project. It 
 This page shows a large map documenting all the locations of trips - of course, the more users on this app, the more populated the map would be.
 Each user's memory is allocated a unique colour trip polyline to track places of travel.
 
+```js
+const attachLineColorToTrips = (trips) => {
+  return trips.map(trip => {
+    trip.lineColor = randomRGBA({ alpha: 0.8 })
+    return trip
+  })
+}
+```
+
 ![see all trips](/rmassets/seealltrips.png)
 
 
 ### Register and Login:
 Both forms are controlled by using state and will throw errors if any of the field requirements are not met.
-Once a user successfully registers, the page redirects to the login page. Once login is successful the user is granted a token and redirected to the user profile page.
+Once a user successfully registers, the page redirects to the login page. Once login is successful, the user is granted a token and redirected to the user profile page.
 
   ```js
   const handleSubmit = async (e) => {
@@ -394,7 +405,7 @@ Once a user successfully registers, the page redirects to the login page. Once l
 ### Profile:
 The initial profile page created upon initial login is only partially complete.
 A placebook default image is used for the profile image.
-From this point the logged in user has options to edit profile or navigate to creating a new trip/memory.
+From this point, the logged in user has options to edit profile or navigate to creating a new trip/memory.
 ![initial profile](/rmassets/profileinitial.png)
 
 ### Edit Profile:
@@ -413,14 +424,14 @@ Following on from the user profile memories (index), the below illustrates a sin
 
 
 ## Challenges:
-* Working on a shared Github file
+* Working on a shared GitHub file
 * Merge conflicts 
 * Using new technologies (Map), Maps is out of my comfort zone
 * Bootstrap 5.0 took a little bit of getting used to
 
 ## Wins:
 * A professional looking app which is mobile responsive
-* Covering a lot of ground over the course of 1 week I'm very happy that we have managed to build a full-stack app that conveys what we initially set out to do.
+* Covering a lot of ground over the course of 1 week, I'm very happy that we have managed to build a full-stack app that conveys what we initially set out to do.
 
 ## Bugs:
 * Deployed app 'Inspire Me' correctly shows the country index, but when clicking into an individual country, the page breaks.
@@ -436,11 +447,11 @@ Following on from the user profile memories (index), the below illustrates a sin
 * add & commit often and communicate on every push
 * I am happy with this app, but in hindsight, I feel that the scope of this project was probably too much (we were working on this project right up to the deadline and didn't allow enough time to properly debug/iron out issues)
 * Working with Mike and Duncan helped me understand the importance of communication and collaboration within a team
-* If ever I need to use Maps going forward, avoid google maps
+* If ever I need to use Maps going forward, avoid Google maps
 
 ## Future Content and Improvements:
-* Its easy to suggest things to add (i.e, liking photos/memories, perhaps comment features) - however I think that any chance to revisit would be to prioritise ironing out bugs to allow all page functionality and then improve on usability of app
-* General aesthetics ok, but maybe pages that have maps need simplifying or updating the layout to make the user experience more streamlined.
-* Improve user navigation experience, I feel that for someone who has never used the site before may struggle with what order to do things. Such as a user wanting to upload memories (photos), they would first need to create a trip, fill in details, pick a country, and save the trip. Then upload photo, fill in form, finetune location on map, and then save the memory
+* It's easy to suggest things to add (i.e, liking photos/memories, perhaps comment features) - however, I think that any chance to revisit would be to prioritise ironing out bugs to allow all page functionality and then improve on usability of app
+* General aesthetics ok, but maybe pages that have maps need simplifying or updating the layout to make the user experience more streamlined
+* Improve user navigation experience, I feel that someone who has never used the site before may struggle with what order to do things. Such as, a user wanting to upload memories (photos), they would first need to create a trip, fill in details, pick a country, and save the trip. Then upload photo, fill in form, finetune location on map, and then save the memory
 * Darkmode would be a nice touch to this site 
 ----
