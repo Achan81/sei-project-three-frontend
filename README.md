@@ -1,3 +1,4 @@
+
 # <img src="https://i.imgur.com/zbU8s94.png" width=100> GA SEI 60 Project Three - PLACEBOOK README
 
 [Overview](#overview "Goto overview") |
@@ -24,8 +25,6 @@
 [Key Learnings](#key-learnings "Goto key-learnings") |
 [Future Content and Improvements](#future-content-and-improvements "Goto future-content-and-improvements")
 
-![demo app](/rmassets/home.png)
-
 ## Overview:
 Placebook is full-stack app focused on travel and memories. Users would be able to create trips, and upload their own unique memories (photos with notes). The aim of this app is to allow like minded travellers to document and share their memories to this community.
 <br></br>
@@ -47,7 +46,7 @@ This was a one-week group project built in collaboration with [**Duncan Browne**
 ## Technologies used:
 
 * Frontend:\
-React.js | JavaScript | Axios | CSS & Sass | Bootstrap 5.0
+React.js | JavaScript | Axios | CSS & Sass | Bootstrap 5.0 | React-Bootstrap
 
 * Backend:\
 MongoDB | Mongoose | Express | Node.js | Insomnia
@@ -146,11 +145,7 @@ memories: [{ type: mongoose.Schema.ObjectId, ref: 'Memory' }],
 ```
 Using Mongoose’s relationships, we were able to reference the other models and populate these fields when needed. This was particularly useful in creating our trip/memory relationship.
 
-
-#### 
-The purpose of this site is to allow users to upload their memories to be visable to all. 
-
-## Router:
+### Router:
  This file defines each of the pages accessibility and decides which requests would require a user to be logged in (secure route).
 
  The app is mostly publicly accessible to everyone (home page, countries index page, country show page, trips index page, trips show page, memories index, memory show) however anything profile related with the power to create / edit / delete would require user authentication.  
@@ -235,12 +230,132 @@ export default function errorHandler (err, req, res, next) {
 }
 ```
 
+### Seeding Data (Country pages): 
+206 countries would ideally be pre-populated with data and images.
+However as this was our own backend, it was a very long process which was a poor use of time (I surrendered after doing about 40 countries). The summary and additional information was obtained and edited from Wikipedia. Each country image was sourced from the web and stored into imgur. 
 
+An example of data for one country below...
+
+```js
+  {
+    name: 'Japan',
+    countrycode: 'JPN',
+    image: 'https://i.imgur.com/iXOULiL.jpg?2',
+    summary: 'The capital of Japan is Tokyo, Japan (Japanese: 日本, Nippon or Nihon, and formally 日本国) is an island country in East Asia.  It is situated in the northwest Pacific Ocean, and is bordered on the west by the Sea of Japan, while extending from the Sea of Okhotsk in the north toward the East China Sea and Taiwan in the south.  Japan is a part of the Ring of Fire, and spans an archipelago of 6852 islands covering 377,975 square kilometers (145,937 sq mi); the five main islands are Hokkaido, Honshu (the "mainland"), Shikoku, Kyushu, and Okinawa.  Tokyo is the nation\'s capital and largest city; other major cities include Yokohama, Osaka, Nagoya, Sapporo, Fukuoka, Kobe, and Kyoto.',  
+    language: 'Japanese',
+    currency: 'Yen',
+  },
+```
 
 ## FrontEnd:
+My main role in this project was on the Frontend. I began this process by setting up the routes so that the main pages could be built.
 
-## Countries Index Page:
-## Country Show Page:
+```js
+    <BrowserRouter>
+      <Nav/>
+      <Switch>
+        <Route exact path="/"><Home /></Route>
+        <Route path="/aboutus"><AboutUs/></Route>
+
+        <SecureRoute path="/profile/edit"><ProfileEdit /></SecureRoute>
+        <Route path="/profile/:userId"><Profile /></Route>
+        <SecureRoute path="/profile"><Profile /></SecureRoute>
+
+        <Route exact path="/countries"><Countries/></Route>
+        <Route path="/countries/:countryId"><CountryShow/></Route>
+        
+        <Route path="/register"><Register/></Route>
+        <Route path="/login"><Login/></Route>
+
+        <Route path="/trips/new"><TripCreate /></Route>
+        <SecureRoute path="/trips/:tripId/edit"><TripEdit /></SecureRoute>
+        <Route path="/trips/:tripId/"><TripShow /></Route>
+        <Route path="/trips/"><TripsIndexAsMap /></Route>
+
+        <Route path="/memories/:memoryId"><MemoryShow /></Route>
+
+      </Switch>
+    </BrowserRouter>
+```
+
+#### Home Page:
+This was the first page to be created.
+![demo app](/rmassets/home.png)
+
+#### Nav Bar:
+Created with Bootstrap 5 & React Bootstrap, it has been created without a background to allow a cleaner looking nav bar. The far left icon is the home button. Register and Login is stacked on the right. When a user has logged in, this section will update to show logout.
+
+```js
+<Navbar bg="" variant="light" expand="md">    
+  <Link to="/" className="homeIcon navbar-nav"><img alt="logo" 
+    className="logo-home nav-link me-auto" src ={logoImageLink}/></Link>
+  <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+    <Navbar.Collapse id="basic-navbar-nav">    
+      <ul className="navbar-nav me-auto"> 
+        <li className="nav-item active">
+          <Link to="/aboutus" className="nav-link active">About Us</Link></li>
+        <li className="nav-item active">
+          <Link to="/countries" className="nav-link active">Inspire Me</Link></li> 
+        <li className="nav-item active">
+          <Link to= "/trips/new" className="nav-link active">Create a Trip</Link></li>
+        <li className="nav-item active">
+          <Link to= "/trips" className="nav-link active">See Trips</Link></li>  
+      </ul>      
+      <ul className="navbar-nav ms-auto">   
+          {!isLoggedIn && 
+            (
+            <div className="nav-item auth">
+              <li className="nav-item"><Link to="/register" className="nav-link active">REGISTER</Link></li>
+              <li className="nav-item"><Link to="/login" className="nav-link active">LOGIN</Link></li>
+            </div>
+            )}
+          {isLoggedIn && (
+            <>
+              <Link to="/" className="navbar-item nav-link active" onClick={handleLogout}>LOG OUT</Link>
+              <Link to={'/profile'} className="nav-link active">Profile</Link>
+            </>
+          )}
+      </ul>
+      </Navbar.Collapse>
+    </Navbar>   
+  ```
+
+#### About Us:
+This page was created to give an introduction into what the app does. The page is full mobile reponsive and features modal pop out images created with Bootstrap.
+![demo app](/rmassets/about.png)
+
+#### Inspire Me:
+This page acts as a index of all the countries. Clicking onto any of the country images will take you to a show page for the selected country. The Index page has a search bar for the user to type the country of choice.
+
+```js
+  const handleSearch = (e) => {
+    setSearchValue(e.target.value)
+  }
+
+  const filteredCountries = (countries) => {    
+    return countries.filter(country => {
+      return (
+        country.name.toLowerCase().includes(searchValue.toLowerCase()) 
+      )
+    })
+  }
+```
+![demo app](/rmassets/countriesindex.png)
+
+### Show Country Page:
+User trips that match this country are added to the country page for other users to view.
+![demo app](/rmassets/countryloggedtrips.png)
+
+### Create a Trip:
+This page can only be accessed if user is logged in.
+![demo app](/rmassets/createtrip2.png)
+
+### See Trips:
+### Register 
+### Login
+### Profile
+### Edit Profile
+###
 
  
 
@@ -274,74 +389,5 @@ export default function errorHandler (err, req, res, next) {
 * Its easy to suggest things to add (i.e, liking photos/memories, perhaps comment features) - however I think that any chance to revisit would be to prioritise ironing out bugs to allow all page functionality and then improve on usability of app
 * General aethetics ok, but maybe pages that have maps need simplifying or update to layout to make the user experience more streamlined.
 * Improve user navigation experience, I feel that for someone who has never used the site before may struggle with what order to do things. Such as a user wanting to upload memories (photos), they would first need to create a trip, fill in details, pick a country, and save the trip. Then upload photo, fill in form, finetune location on map, and then save the memory
- 
+* Darkmode would be a nice touch to this site 
 ----
-
-
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project #3: A MERN Stack App
-​
-## Overview
-​
-**You’ve come a long way, and it's time to show it.** This will be your most advanced project to date. It is __IMPORTANT__ to note that when we say _advanced_, the project doesn't necessarily need to have lots more functionality.
-​
-This project will be working in groups of 3/4, set by the instructional teams.
-​
-**Remember:** simple code is stable code, so always favour refactoring and bug fixing over adding more functionality.
-​
-With this in mind, you need to be smart about how you plan, limit your project scope to be achievable (in terms of functionality) and focus on quality rather than quantity.
-​
-Make sure you review your project proposal with your instructor so you can make sure it's **something you can accomplish in the limited time we have**.
-​
----
-​
-## Technical Requirements
-​
-You must:
-​
-* **Build a full-stack application** by making your own backend and your own front-end
-* **Use an Express API** to serve your data from a Mongo database
-* **Consume your API with a separate front-end** built with React
-* **Be a complete product** which most likely means multiple relationships and CRUD functionality for at least a couple of models
-* **Implement thoughtful user stories/wireframes** that are significant enough to help you know which features are core MVP and which you can cut
-* **Have a visually impressive design** to kick your portfolio up a notch and have something to wow future clients & employers. **ALLOW** time for this.
-* **Be deployed online** so it's publicly accessible.
-​
----
-​
-## Necessary Deliverables
-​
-* A **working app** hosted on the internet
-* A **link to your hosted working app** in the URL section of your Github repo
-* A **git repository hosted on Github**, with a link to your hosted project, and frequent commits dating back to the _very beginning_ of the project
-* **A `readme.md` file** with:
-    * An embedded screenshot of the app
-    * Explanations of the **technologies** used
-    * A couple paragraphs about the **general approach you took**
-    * **Installation instructions** for any dependencies
-    * Link to your **user stories/wireframes** – sketches of major views / interfaces in your application
-    * Link to your **pitch deck/presentation** – documentation of your wireframes, user stories, and proposed architecture
-    * Descriptions of any **unsolved problems** or **major hurdles** you had to overcome
-​
----
-​
-## Suggested Ways to Get Started
-​
-* **Don’t get too caught up in too many awesome features** – simple is always better. Build something impressive that does one thing well.
-* **Design first.** Planning with user stories & wireframes before writing code means you won't get distracted changing your mind – you'll know what to build, and you can spend your time wisely by just building it.
-* **Don’t hesitate to write throwaway code** to solve short term problems.
-* **Read the docs for whatever technologies / frameworks / API’s you use**.
-* **Write your code DRY** and **build your APIs RESTful**.
-* **Be consistent with your code style.** You're working in teams, but you're only making one app per team. Make sure it looks like a unified effort.
-* **Commit early, commit often.** Don’t be afraid to break something because you can always go back in time to a previous version.
-* **Keep user stories small and well-defined**, and remember – user stories focus on what a user needs, not what development tasks need accomplishing.
-* **Write code another developer wouldn't have to ask you about**. Do your naming conventions make sense? Would another developer be able to look at your app and understand what everything is?
-* **Make it all well-formatted.** Are you indenting, consistently? Can we find the start and end of every div, curly brace, etc?
-* **Comment your code.** Will someone understand what is going on in each block or function? Even if it's obvious, explaining the what & why means someone else can pick it up and get it.
-* **Write pseudocode before you write actual code.** Thinking through the logic of something helps.
-​
----
-## Sign Off Requirments
-​
-* **A Simple Wireframe** of the front end of the application, this should take into account the user flow through the app, eg, what can logged in users see/not see.
-* **A plan for what models/resources** that is needed for the back end application and what the relationships between these will be
-* **A great group name**
