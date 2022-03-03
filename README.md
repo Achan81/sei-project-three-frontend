@@ -13,7 +13,6 @@
 [Backend](#backend "Goto backend") |
 [Router](#router "Goto router") |
 [Seeding Data](#seeding-data "Goto seeding data") |
-
 [Frontend](#frontend "Goto frontend") |
 [Home Page](#home-page "Goto home page") |
 [Nav Bar](#nav-bar "Goto nav bar") |
@@ -29,8 +28,6 @@
 [Edit Profile](#edit-profile "Goto edit profile") |
 [Profile with memories](#profile-with-memories "Goto profile with memories") |
 [Single Memory view](#single-memory-view "Goto single memory view ") |
-
-
 [Challenges](#challenges "Goto challenges") |
 [Wins](#wins "Goto wins") |
 [Bugs](#bugs "Goto bugs") |
@@ -454,4 +451,8 @@ Following on from the user profile memories (index), the below illustrates a sin
 * General aesthetics ok, but maybe pages that have maps need simplifying or updating the layout to make the user experience more streamlined
 * Improve user navigation experience, I feel that someone who has never used the site before may struggle with what order to do things. Such as, a user wanting to upload memories (photos), they would first need to create a trip, fill in details, pick a country, and save the trip. Then upload photo, fill in form, finetune location on map, and then save the memory
 * Darkmode would be a nice touch to this site 
-----
+
+<br></br>
+<hr></hr>
+
+[Back to TOP](#overview "Goto overview")
